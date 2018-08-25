@@ -18,6 +18,7 @@ sapply(credit_data_df,summary)
 # V1  V2  V3  V4  V5  V6  V7  V8  V9 V10 V11 V12 V13 V14 V15 V16 
 # 12  12   0   6   6   9   9   0   0   0   0   0   0  13   0   0 
 
+
 #checking the correlation between the unknowns
 
 # V1
@@ -35,13 +36,25 @@ credit_data_df %>% filter(V1 == "?") %>% summary()
 credit_data_df %>% filter(V2 == "?") 
 credit_data_df %>% filter(V2 == "?") %>% summary()
 credit_data_df %>% summary()
+
+# imputing the missing values with k-NN
+install.packages("Amelia")
+require(Amelia)
+
+# V1,V2,V4,V5,V6,V7,V14
+wip_cc_df <- credit_data_df
+apply(credit_data_df[,c("V1","V2","V4","V5","V6","V7","V14")],
+      MARGIN = 2, function(x) which(x == "?"))
+
+Amelia::missmap(credit_data_df)
+
 V2 <- as.numeric(credit_data_df[!credit_data_df$V2 =="?",]["V2"]) 
 attributes(V2)
 V2$V2 <- as.numeric(V2$V2)
 summary(V2$V2)
-summary(V2$V2[-which(V2$V2 %in% boxplot.stats(x = V2$V2,coef = 1.58)$stats)])
+summary(V2$V2[V2$V2 %in% boxplot.stats(x = V2$V2,coef = 1.58)$stats])
 boxplot(as.numeric(V2$V2))
-summary(as.numeric(as.character(V2)))
+
 
 
 # Comments: Missing at Random
